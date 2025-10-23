@@ -19,9 +19,9 @@ public:
 		int boxes = input("how many boxes delivered: ");
 		int money = input("how much do you need to pay: ");
 		if (money <= budget) {
-			budget = budget - money;
 			if (Boxes + boxes <= place) {
 				Boxes = Boxes + boxes;
+				budget = budget - money;
 				cout << "boxes added to the storage" << endl;
 			}
 			else {
@@ -62,9 +62,13 @@ public:
 		if (element != bills.end()) {
 			bills.erase(element);
 		}
+		else {
+			cout << "there is no such dish" << endl;
+		}
 
 	}
 	void cooking_list() {
+		cout << "bill list:" << endl;
 		for (auto i : bills) {
 			cout << i << endl;
 		}
@@ -74,6 +78,14 @@ public:
 		budget = x;
 		place = y;
 		Boxes = z;
+	}
+	void info() {
+		cout << "total place:" << endl;
+		cout << place << endl;
+		cout << "boxes in the storage:" << endl;
+		cout << Boxes << endl;
+		cout << "money:" << endl;
+		cout << budget << endl;
 	}
 };
 class Restaurant {
@@ -120,11 +132,12 @@ void menu(Kitchen*& kitchen1) {
 	cout << "4. new order" << endl;
 	cout << "5. meal done" << endl;
 	cout << "6. cooking list" << endl;
-	cout << "7. exit" << endl;
+	cout << "7. info" << endl;
+	cout << "8. exit" << endl;
 	cin >> variant;
 	cin.clear();
 	cin.ignore(numeric_limits<streamsize>::max(), '\n');
-	if (!(1 <= variant && variant <= 6)) {
+	if (!(1 <= variant && variant <= 8)) {
 		cout << "incorrect!" << endl;
 		return;
 	}
@@ -148,6 +161,9 @@ void menu(Kitchen*& kitchen1) {
 		kitchen1->cooking_list();
 		break;
 	case 7:
+		kitchen1->info();
+		break;
+	case 8:
 		exit(0);
 		break;
 	}
@@ -156,11 +172,15 @@ int main() {
 	Restaurant* rest1 = Restaurant::get_object();
 	Kitchen* kitchen1 = rest1->get_Kitchen(); 
 	int x = input("kitchen budget: ");
-	int y = input("Total place in the storage: ");
-	int z = input("boxes in the storage: ");
+	int y;
+	int z;
+	do {
+		y = input("Total place in the storage: ");
+		z = input("boxes in the storage: ");
+	} while (y < z);
+
 	kitchen1->setter(x, y, z);
 	while (1) {
 		menu(kitchen1);
 	}
-	
 }
