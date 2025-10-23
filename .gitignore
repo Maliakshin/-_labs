@@ -1,0 +1,14 @@
+# Compiled files
+*.exe
+*.obj
+*.pdb
+*.ilk
+*.idb
+*.log
+*.recipe
+
+# Build directories
+x64/
+Debug/
+Release/
+*.tlog/
