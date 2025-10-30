@@ -20,11 +20,11 @@ private:
 	int passport;
 	int days;
 public:
-	guest() {
+	guest(int set_passport) {
 		name = input_name("guest name: ");
 		surname = input_name("guest surname: ");
-		passport = input("passport number (together): ");
 		days = input("how many days: ");
+		passport = set_passport;
 	}
 	void get_info() {
 		cout << "name:" << endl;
@@ -62,9 +62,9 @@ public:
 			return false;
 		}
 	}
-	void new_guest() {
-		if (client != nullptr) {
-			client = new guest;
+	void new_guest(int passport) {
+		if (client == nullptr) {
+			client = new guest(passport);
 		}
 	}
 	void get_profit() {
@@ -108,20 +108,57 @@ public:
 		cout << "hotel destroyed" << endl;
 	}
 	void new_client(roomtype type) {
-		bool fl = false;
+		int passport = input("passport number (together): ");
+		bool flag = false;
+		for (int i = 0; i < rooms.size(); i++) {
+			if (!rooms[i].free()) {
+				if (passport == rooms[i].get_passport()) {
+					flag = true;
+					break;
+				}
+			}
+		}
+		if (!flag)
+		{
+			for (int i = 0; i < luxrooms.size(); i++) {
+				if (!luxrooms[i].free()) {
+					if (passport == luxrooms[i].get_passport()) {
+						flag = true;
+						break;
+					}
+				}
+			}
+		}
+		if (!flag)
+		{
+			for (int i = 0; i < presidentrooms.size(); i++) {
+				if (!presidentrooms[i].free()) {
+					if (passport == presidentrooms[i].get_passport()) {
+						flag = true;
+						break;
+					}
+				}
+			}
+		}
+		if (flag)
+		{
+			cout << "this passport already used!" << endl;
+			return;
+		}
+		flag = false;
 		switch (static_cast<int>(type))
 
 		{
 		case(1) :
 			for (int i = 0; i < rooms.size(); i++) {
 				if (rooms[i].free()) {
-					rooms[i].new_guest();
+					rooms[i].new_guest(passport);
 					cout << "Guest added" << endl;
-					fl = true;
+					flag = true;
 					break;
 				}
 			}
-			if (!fl)
+			if (!flag)
 			{
 				cout << "all rooms of this type are busy!" << endl;
 			}
@@ -129,13 +166,13 @@ public:
 		case(2):
 			for (int i = 0; i < luxrooms.size(); i++) {
 				if (luxrooms[i].free()) {
-					luxrooms[i].new_guest();
+					luxrooms[i].new_guest(passport);
 					cout << "Guest added" << endl;
-					fl = true;
+					flag = true;
 					break;
 				}
 			}
-			if (!fl)
+			if (!flag)
 			{
 				cout << "all rooms of this type are busy!" << endl;
 			}
@@ -143,13 +180,13 @@ public:
 		case(3):
 			for (int i = 0; i < presidentrooms.size(); i++) {
 				if (presidentrooms[i].free()) {
-					presidentrooms[i].new_guest();
+					presidentrooms[i].new_guest(passport);
 					cout << "Guest added" << endl;
-					fl = true;
+					flag = true;
 					break;
 				}
 			}
-			if (!fl)
+			if (!flag)
 			{
 				cout << "all rooms of this type are busy!" << endl;
 			}
@@ -161,31 +198,28 @@ public:
 		cout << "free standart rooms: " << endl;
 		for (int i = 0; i < rooms.size(); i++) {
 			if (rooms[i].free()) {
-				cout << i+1 << endl;
-				break;
+				cout << "standart " << i + 1 << endl;
 			}
 		}
 		cout << "free lux rooms: " << endl;
 		for (int i = 0; i < luxrooms.size(); i++) {
 			if (luxrooms[i].free()) {
-				cout << i+1 << endl;
-				break;
+				cout << "lux " << i+1 << endl;
+
 			}
 		}
 		cout << "free president rooms: " << endl;
 		for (int i = 0; i < presidentrooms.size(); i++) {
 			if (presidentrooms[i].free()) {
-				cout << i+1 << endl;
-				break;
+				cout << "president " << i+1 << endl;
 			}
 		}
 	}
 	void guests() {
 		for (int i = 0; i < rooms.size(); i++) {
 			if (!rooms[i].free()) {
-				cout << "room:" << endl;
+				cout << "room standart:" << endl;
 				cout << i + 1 << endl;
-				cout << "guest:" << endl;
 				rooms[i].get_guest_info();
 			}
 		}
@@ -193,7 +227,6 @@ public:
 			if (!luxrooms[i].free()) {
 				cout << "room lux:" << endl;
 				cout << i + 1 << endl;
-				cout << "guest:" << endl;
 				luxrooms[i].get_guest_info();
 			}
 		}
@@ -201,7 +234,6 @@ public:
 			if (!presidentrooms[i].free()) {
 				cout << "room president:" << endl;
 				cout << i + 1 << endl;
-				cout << "guest:" << endl;
 				presidentrooms[i].get_guest_info();
 			}
 		}
@@ -222,7 +254,7 @@ public:
 			for (int i = 0; i < luxrooms.size(); i++) {
 				if (!luxrooms[i].free()) {
 					if (passport == luxrooms[i].get_passport()) {
-						rooms[i].get_profit();
+						luxrooms[i].get_profit();
 						fl = true;
 						break;
 					}
@@ -232,7 +264,7 @@ public:
 		if (!fl) {
 			for (int i = 0; i < presidentrooms.size(); i++) {
 				if (passport == presidentrooms[i].get_passport()) {
-					rooms[i].get_profit();
+					presidentrooms[i].get_profit();
 					fl = true;
 					break;
 				}
@@ -278,7 +310,7 @@ void menu(hotel*& hotel1) {
 	}
 	switch (variant) {
 	case 1: {
-		cout << "choose room type: 1 - standart, 2 - lux, 3 - president";
+		cout << "choose room type: 1 - standart, 2 - lux, 3 - president" << endl;
 		int type = input("room type: ");
 		if (!(1 <= type && type <= 3)) {
 			cout << "incorrect!" << endl;
