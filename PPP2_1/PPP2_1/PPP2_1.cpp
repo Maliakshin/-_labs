@@ -337,15 +337,27 @@ void menu(hotel*& hotel1) {
 	}
 }
 int input(string x) {
-	int y;
+	string y;
+	int i = 0;
 	do
 	{
+		i = 0;
 		cout << x << endl;
 		cin >> y;
 		cin.clear();
 		cin.ignore(numeric_limits<streamsize>::max(), '\n');
-	} while (y < 1 || y > 2000000000);
-	return y;
+		for (char c : y) {
+			if (c >= '0' && c <= '9') {
+				i = i * 10 + (c - '0');
+			}
+			else {
+				cout << "Bad Input"<< endl;
+				i = -1000;
+				break;
+			}
+		}
+	} while (i < 1 || i > 46000);
+	return i;
 }
 string input_name(string x) {
 	string y;
