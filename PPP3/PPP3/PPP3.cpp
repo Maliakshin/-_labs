@@ -15,7 +15,6 @@ struct WrongInputException {
 
 int Input(string x) {
 	cout << x << endl;
-	std::cin.exceptions(std::istream::failbit);
 	int i;
 	std::cin >> i;
 	if (cin.peek() != EOF && cin.peek() != '\n') {
@@ -24,6 +23,7 @@ int Input(string x) {
 	if (i <= 0 || i >= 2000000000) {
 		throw WrongInputException(i);
 	}
+	std::cin.exceptions(std::istream::failbit);
 	return i;
 }
 int input(string x) {
@@ -31,11 +31,15 @@ int input(string x) {
 	try {
 		return Input(x);
 	}
-	catch (const WrongInputException& ex) {
+	catch (WrongInputException& ex) {
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
 		cout << "Wrong input! " << endl;
 		goto trying;
 	}
 	catch (...) {
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
 		cout << "Some other exception" << endl;
 		goto trying;
 	}

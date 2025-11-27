@@ -17,10 +17,10 @@ class guest {
 private:
 	string name;
 	string surname;
-	int passport;
+	string passport;
 	int days;
 public:
-	guest(int set_passport) {
+	guest(string set_passport) {
 		name = input_name("guest name: ");
 		surname = input_name("guest surname: ");
 		days = input("how many days: ");
@@ -39,7 +39,7 @@ public:
 	int get_days() {
 		return days;
 	}
-	int get_passport() {
+	string get_passport() {
 		return passport;
 	}
 };
@@ -62,7 +62,7 @@ public:
 			return false;
 		}
 	}
-	void new_guest(int passport) {
+	void new_guest(string passport) {
 		if (client == nullptr) {
 			client = new guest(passport);
 		}
@@ -71,7 +71,7 @@ public:
 		cout << "profit:" << endl;
 		cout << client->get_days()*price << endl;
 	}
-	int get_passport() {
+	string get_passport() {
 		return client->get_passport();
 	}
 	void get_guest_info() {
@@ -108,7 +108,7 @@ public:
 		cout << "hotel destroyed" << endl;
 	}
 	void new_client(roomtype type) {
-		int passport = input("passport number (together): ");
+		string passport = input_name("passport number (together): ");
 		bool flag = false;
 		for (int i = 0; i < rooms.size(); i++) {
 			if (!rooms[i].free()) {
@@ -239,7 +239,7 @@ public:
 		}
 	}
 	void get_profit() {
-		int passport = input("passport (together): ");
+		string passport = input_name("passport (together): ");
 		bool fl = false;
 		for (int i = 0; i < rooms.size(); i++) {
 			if (!rooms[i].free()) {
